@@ -1,0 +1,95 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+      
+      - name: Run tests
+        run: mvn test
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: target/surefire-reports/
+          retention-days: 30
+      
+      - name: Generate test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Maven Test Results
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: true
+
+  docker-build-validation:
+    name: Docker Build Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image
+        run: docker build -t multi-agent-assistant:test .
+      
+      - name: Validate Docker image
+        run: |
+          echo "Checking if image was built successfully..."
+          docker images | grep multi-agent-assistant
+      
+      - name: Run health check
+        run: |
+          echo "Starting container for health check..."
+          docker run -d --name test-container \
+            -p 8080:8080 \
+            -e NVIDIA_API_KEY=test-key \
+            multi-agent-assistant:test
+          
+          echo "Waiting for application to start..."
+          sleep 30
+          
+          echo "Running health check..."
+          curl -f http://localhost:8080/health || exit 1
+          
+          echo "Stopping container..."
+          docker stop test-container
+          docker rm test-container

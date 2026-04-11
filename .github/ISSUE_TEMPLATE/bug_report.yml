@@ -1,0 +1,108 @@
+name: Bug Report
+description: File a bug report to help us improve
+title: "[BUG] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible to help us resolve the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the bug you encountered...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Execute command '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: A clear and concise description of what actually happened.
+      placeholder: What actually happened?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      options:
+        - Windows
+        - macOS
+        - Linux (Ubuntu)
+        - Linux (Debian)
+        - Linux (Fedora)
+        - Linux (Other)
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: java-version
+    attributes:
+      label: Java Version
+      description: What version of Java are you using?
+      options:
+        - Java 17
+        - Java 18
+        - Java 19
+        - Java 20
+        - Java 21
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: app-version
+    attributes:
+      label: Application Version
+      description: What version of the Multi-Agent Coding Assistant are you using?
+      placeholder: e.g., 1.0.0 or commit hash
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code.
+      placeholder: Paste logs here...
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here (screenshots, configuration files, etc.).
+      placeholder: Any additional information that might help...
+    validations:
+      required: false

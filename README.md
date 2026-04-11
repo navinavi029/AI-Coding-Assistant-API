@@ -1,258 +1,247 @@
-# Gemma4-Code-Assistant-API
+# Multi-Agent Coding Assistant
 
-> A production-ready multi-agent coding assistant powered by Google's Gemma 4 (31B) model via NVIDIA API, built with Spring Boot 3.2
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-green)
 
-[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+## Overview
 
-## 🚀 Features
+The Multi-Agent Coding Assistant is an intelligent Java-based application that leverages multiple specialized AI agents to provide comprehensive coding assistance. Built with Spring Boot and integrated with NVIDIA's AI API, this system orchestrates different agents to handle code generation, code review, and code explanation tasks efficiently.
 
-- **Multi-Agent Architecture**: Three specialized AI agents for different coding tasks
-  - 🔨 **Code Generation Agent**: Generate clean, efficient, well-documented code
-  - 🔍 **Code Review Agent**: Analyze code quality, identify issues, suggest improvements
-  - 📚 **Code Explanation Agent**: Explain complex code concepts in simple terms
+The application uses a multi-agent architecture where each agent specializes in a specific domain of coding assistance. The orchestrator intelligently routes requests to the appropriate agent based on the task type, ensuring optimal performance and accuracy. This modular design allows for easy extension and maintenance while providing a unified API interface for all coding assistance operations.
 
-- **Production-Ready**
-  - ✅ Comprehensive error handling and logging
-  - ✅ RESTful API with OpenAPI/Swagger documentation
-  - ✅ Docker support for easy deployment
-  - ✅ 85+ unit tests with high coverage
-  - ✅ Configurable timeouts and retry logic
+Whether you're generating new code, reviewing existing implementations, or seeking explanations for complex code structures, the Multi-Agent Coding Assistant provides AI-powered support through a simple REST API, making it easy to integrate into your development workflow.
 
-- **Modern Tech Stack**
-  - Spring Boot 3.2.1 with WebFlux for reactive programming
-  - Integration with NVIDIA API (Google Gemma 4 31B model)
-  - Swagger UI for interactive API testing
-  - Logback for structured logging
+## Features
 
-## 📋 Table of Contents
+- **Code Generation**: Generate code snippets, functions, and complete implementations based on natural language descriptions
+- **Code Review**: Automated code review with suggestions for improvements, best practices, and potential issues
+- **Code Explanation**: Detailed explanations of code functionality, logic flow, and design patterns
+- **NVIDIA API Integration**: Powered by NVIDIA's advanced AI models for high-quality responses
+- **Multi-Agent Orchestration**: Intelligent routing to specialized agents for optimal task handling
+- **RESTful API**: Simple HTTP endpoints for easy integration
+- **Docker Support**: Containerized deployment for consistent environments
+- **OpenAPI Documentation**: Interactive API documentation via Swagger UI
 
-- [Quick Start](#-quick-start)
-- [Prerequisites](#-prerequisites)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Usage](#-usage)
-- [API Documentation](#-api-documentation)
-- [Docker Deployment](#-docker-deployment)
-- [Testing](#-testing)
-- [Architecture](#-architecture)
-- [Contributing](#-contributing)
-- [License](#-license)
+## Table of Contents
 
-## ⚡ Quick Start
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Docker Deployment](#docker-deployment)
+- [Development Setup](#development-setup)
+- [Testing](#testing)
+- [API Documentation](#api-documentation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Security](#security)
+- [Code of Conduct](#code-of-conduct)
+
+## Prerequisites
+
+Before running the Multi-Agent Coding Assistant, ensure you have the following installed:
+
+- **Java 17** or higher
+- **Maven 3.6+** for dependency management and building
+- **Docker** (optional, for containerized deployment)
+- **NVIDIA API Key** for AI model access
+
+## Installation
+
+### Step 1: Clone the Repository
 
 ```bash
-# Clone the repository
-git clone https://github.com/<YOUR_USERNAME>/Gemma4-Code-Assistant-API.git
-cd Gemma4-Code-Assistant-API
-
-# Set your NVIDIA API key
-export NVIDIA_API_KEY="your-api-key-here"
-
-# Build and run
-mvn clean package
-java -jar target/multi-agent-assistant-1.0.0.jar
-
-# Access Swagger UI
-open http://localhost:8080/swagger-ui/index.html
+git clone https://github.com/yourusername/multi-agent-assistant.git
+cd multi-agent-assistant
 ```
 
-## 📦 Prerequisites
+### Step 2: Configure Environment Variables
 
-- **Java 17+** - [Download](https://www.oracle.com/java/technologies/downloads/)
-- **Maven 3.6+** - [Download](https://maven.apache.org/download.cgi)
-- **NVIDIA API Key** - [Get yours here](https://build.nvidia.com/)
-
-## 🔧 Installation
-
-### Option 1: Local Development
+Copy the example environment file and configure your NVIDIA API key:
 
 ```bash
-# Clone the repository
-git clone https://github.com/<YOUR_USERNAME>/Gemma4-Code-Assistant-API.git
-cd Gemma4-Code-Assistant-API
+cp .env.example .env
+```
 
-# Install dependencies and build
+Edit `.env` and add your NVIDIA API key:
+
+```
+NVIDIA_API_KEY=your_nvidia_api_key_here
+```
+
+### Step 3: Build the Project
+
+```bash
 mvn clean install
+```
 
-# Run the application
+### Step 4: Run the Application
+
+```bash
 mvn spring-boot:run
 ```
 
-### Option 2: Docker
+The application will start on `http://localhost:8080`.
+
+## Configuration
+
+The application uses environment variables for configuration. All available variables are documented in `.env.example`:
+
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `NVIDIA_API_KEY` | Your NVIDIA API key for AI model access | Yes | - |
+| `NVIDIA_API_URL` | NVIDIA API endpoint URL | No | `https://integrate.api.nvidia.com/v1` |
+| `NVIDIA_MODEL` | AI model to use | No | `meta/llama-3.1-8b-instruct` |
+| `SERVER_PORT` | Application server port | No | `8080` |
+| `LOG_LEVEL` | Logging level (DEBUG, INFO, WARN, ERROR) | No | `INFO` |
+
+## Usage
+
+### Health Check
+
+Check if the application is running:
 
 ```bash
-# Build Docker image
-docker-compose build
-
-# Run with Docker Compose
-docker-compose up
+curl http://localhost:8080/health
 ```
 
-## ⚙️ Configuration
+Response:
+```json
+{
+  "status": "UP",
+  "timestamp": "2024-01-15T10:30:00Z"
+}
+```
 
-Create a `.env` file in the project root or set environment variables:
+### Code Generation
+
+Generate code based on a description:
 
 ```bash
-# Required
-NVIDIA_API_KEY=your-nvidia-api-key-here
-
-# Optional (with defaults)
-NVIDIA_API_URL=https://integrate.api.nvidia.com/v1/chat/completions
-NVIDIA_MODEL=google/gemma-4-31b-it
-SERVER_PORT=8080
-REQUEST_TIMEOUT_SECONDS=60
-```
-
-### Configuration via `application.yml`
-
-```yaml
-nvidia:
-  api:
-    key: ${NVIDIA_API_KEY}
-    url: ${NVIDIA_API_URL:https://integrate.api.nvidia.com/v1/chat/completions}
-    model: ${NVIDIA_MODEL:google/gemma-4-31b-it}
-    request-timeout-seconds: ${REQUEST_TIMEOUT_SECONDS:60}
-
-server:
-  port: ${SERVER_PORT:8080}
-```
-
-## 🎯 Usage
-
-### REST API Examples
-
-#### 1. Generate Code
-
-```bash
-curl -X POST http://localhost:8080/api/v1/assist \
+curl -X POST http://localhost:8080/api/assist \
   -H "Content-Type: application/json" \
   -d '{
-    "prompt": "Write a Python function to calculate fibonacci numbers",
     "agentType": "CODE_GENERATION",
-    "streaming": false
+    "prompt": "Create a Java function to calculate factorial"
   }'
 ```
 
-**Response:**
+Response:
 ```json
 {
-  "content": "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)",
   "agentType": "CODE_GENERATION",
-  "timestamp": "2026-04-09T14:22:54.328657800Z",
-  "error": null,
-  "metadata": {
-    "model": "google/gemma-4-31b-it",
-    "responseId": "chatcmpl-abc123"
-  }
+  "response": "public static long factorial(int n) {\n    if (n < 0) throw new IllegalArgumentException(\"n must be non-negative\");\n    if (n == 0 || n == 1) return 1;\n    long result = 1;\n    for (int i = 2; i <= n; i++) {\n        result *= i;\n    }\n    return result;\n}",
+  "timestamp": "2024-01-15T10:35:00Z"
 }
 ```
 
-#### 2. Review Code
+### Code Review
+
+Request a code review:
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/assist \
+curl -X POST http://localhost:8080/api/assist \
   -H "Content-Type: application/json" \
   -d '{
-    "prompt": "Review this code: function add(a,b){return a+b}",
     "agentType": "CODE_REVIEW",
-    "streaming": false
+    "prompt": "Review this code: public void process() { String s = null; s.length(); }"
   }'
 ```
 
-#### 3. Explain Code
+Response:
+```json
+{
+  "agentType": "CODE_REVIEW",
+  "response": "Issues found:\n1. NullPointerException risk: Variable 's' is initialized to null and immediately dereferenced.\n2. Missing null check before calling s.length().\n\nSuggestions:\n- Add null validation\n- Consider using Optional<String>\n- Add proper error handling",
+  "timestamp": "2024-01-15T10:40:00Z"
+}
+```
+
+### Code Explanation
+
+Get an explanation of code:
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/assist \
+curl -X POST http://localhost:8080/api/assist \
   -H "Content-Type: application/json" \
   -d '{
-    "prompt": "Explain how async/await works in JavaScript",
     "agentType": "CODE_EXPLANATION",
-    "streaming": false
+    "prompt": "Explain this code: Stream.of(1,2,3).map(x -> x * 2).collect(Collectors.toList())"
   }'
 ```
 
-### Streaming Responses
-
-```bash
-curl -X POST http://localhost:8080/api/v1/assist \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "Write a REST API in Spring Boot",
-    "agentType": "CODE_GENERATION",
-    "streaming": true
-  }'
-```
-
-## 📚 API Documentation
-
-### Interactive Documentation
-
-Access Swagger UI at: **http://localhost:8080/swagger-ui/index.html**
-
-### Available Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/assist` | Process coding assistance request |
-| GET | `/api/v1/health` | Health check endpoint |
-| GET | `/api/v1/diagnostic/test-nvidia-connection` | Test NVIDIA API connectivity |
-
-### Request Schema
-
+Response:
 ```json
 {
-  "prompt": "string (required) - Your coding question or task",
-  "agentType": "CODE_GENERATION | CODE_REVIEW | CODE_EXPLANATION (required)",
-  "streaming": "boolean (optional, default: false)"
+  "agentType": "CODE_EXPLANATION",
+  "response": "This code uses Java Streams to transform a collection:\n1. Stream.of(1,2,3) creates a stream of integers\n2. map(x -> x * 2) applies a transformation, multiplying each element by 2\n3. collect(Collectors.toList()) gathers results into a List\n\nResult: [2, 4, 6]\n\nThis is a functional programming approach for data transformation.",
+  "timestamp": "2024-01-15T10:45:00Z"
 }
 ```
 
-### Response Schema
+## Docker Deployment
 
-```json
-{
-  "content": "string - AI-generated response",
-  "agentType": "string - Agent that processed the request",
-  "timestamp": "string - ISO 8601 timestamp",
-  "error": "string | null - Error message if any",
-  "metadata": {
-    "model": "string - Model used",
-    "responseId": "string - Unique response ID"
-  }
-}
-```
-
-## 🐳 Docker Deployment
-
-### Build and Run
+### Build Docker Image
 
 ```bash
-# Build image
-docker build -t gemma4-code-assistant .
-
-# Run container
-docker run -p 8080:8080 \
-  -e NVIDIA_API_KEY=your-key-here \
-  gemma4-code-assistant
+docker build -t multi-agent-assistant:1.0.0 .
 ```
 
-### Docker Compose
+### Run with Docker Compose
 
 ```bash
-# Start all services
 docker-compose up -d
+```
 
-# View logs
-docker-compose logs -f
+This will start the application on port 8080. The docker-compose configuration includes:
+- Automatic restart on failure
+- Environment variable configuration
+- Health check monitoring
+- Volume mounting for logs
 
-# Stop services
+### Stop the Container
+
+```bash
 docker-compose down
 ```
 
-## 🧪 Testing
+## Development Setup
+
+### Local Development Environment
+
+1. **Import into IDE**: Import the project as a Maven project into your preferred IDE (IntelliJ IDEA, Eclipse, VS Code)
+
+2. **Configure Run Configuration**: Set up a run configuration with the following VM options:
+   ```
+   -Dspring.profiles.active=dev
+   ```
+
+3. **Enable Hot Reload**: Use Spring Boot DevTools for automatic restart on code changes (already included in dependencies)
+
+4. **Run in Debug Mode**: Start the application in debug mode to enable breakpoints and step-through debugging
+
+### Project Structure
+
+```
+src/
+├── main/
+│   ├── java/com/assistant/multiagent/
+│   │   ├── client/          # NVIDIA API client
+│   │   ├── config/          # Configuration classes
+│   │   ├── controller/      # REST controllers
+│   │   ├── exception/       # Exception handlers
+│   │   ├── model/           # Data models
+│   │   └── service/         # Business logic and agents
+│   └── resources/
+│       ├── application.yml  # Application configuration
+│       └── logback-spring.xml  # Logging configuration
+└── test/
+    └── java/com/assistant/multiagent/  # Unit and integration tests
+```
+
+## Testing
 
 ### Run All Tests
 
@@ -266,153 +255,70 @@ mvn test
 mvn test -Dtest=NvidiaApiClientTest
 ```
 
-### Test Coverage
+### Run Tests with Coverage
 
 ```bash
 mvn clean test jacoco:report
 ```
 
-View coverage report at: `target/site/jacoco/index.html`
+Coverage reports will be generated in `target/site/jacoco/index.html`.
 
-### Test Statistics
+### Test Categories
 
-- **Total Tests**: 85
-- **Unit Tests**: 85
-- **Integration Tests**: Included
-- **Coverage**: High coverage across all components
+- **Unit Tests**: Test individual components in isolation
+- **Integration Tests**: Test component interactions and API integration
+- **Controller Tests**: Test REST endpoints with MockMvc
 
-## 🏗️ Architecture
+## API Documentation
 
-### System Architecture
+### Swagger UI
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Client Application                       │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            │ HTTP/REST
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   AssistantController                        │
-│                  (REST API Endpoints)                        │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   AgentOrchestrator                          │
-│              (Routes to appropriate agent)                   │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-        ▼                   ▼                   ▼
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│    Code      │   │    Code      │   │    Code      │
-│ Generation   │   │   Review     │   │ Explanation  │
-│    Agent     │   │    Agent     │   │    Agent     │
-└──────┬───────┘   └──────┬───────┘   └──────┬───────┘
-       │                  │                   │
-       └──────────────────┼───────────────────┘
-                          │
-                          ▼
-                ┌──────────────────┐
-                │ NvidiaApiClient  │
-                │  (WebClient)     │
-                └─────────┬────────┘
-                          │
-                          │ HTTPS
-                          ▼
-                ┌──────────────────┐
-                │   NVIDIA API     │
-                │ (Gemma 4 31B)    │
-                └──────────────────┘
-```
-
-### Component Descriptions
-
-- **AssistantController**: REST API endpoints, request validation
-- **AgentOrchestrator**: Routes requests to appropriate specialized agent
-- **Agents**: Specialized AI agents with domain-specific prompts
-- **NvidiaApiClient**: Handles communication with NVIDIA API
-- **Models**: DTOs for request/response serialization
-
-### Key Design Patterns
-
-- **Strategy Pattern**: Different agents for different tasks
-- **Builder Pattern**: Fluent API for request construction
-- **Reactive Programming**: WebFlux for non-blocking I/O
-- **Dependency Injection**: Spring's IoC container
-
-## 📁 Project Structure
+Interactive API documentation is available at:
 
 ```
-Gemma4-Code-Assistant-API/
-├── src/
-│   ├── main/
-│   │   ├── java/com/assistant/multiagent/
-│   │   │   ├── client/              # NVIDIA API client
-│   │   │   ├── config/              # Configuration classes
-│   │   │   ├── controller/          # REST controllers
-│   │   │   ├── exception/           # Exception handlers
-│   │   │   ├── model/               # DTOs and models
-│   │   │   ├── service/             # Business logic (agents)
-│   │   │   └── MultiAgentAssistantApplication.java
-│   │   └── resources/
-│   │       ├── application.yml      # Application config
-│   │       └── logback-spring.xml   # Logging config
-│   └── test/                        # Unit and integration tests
-├── docker-compose.yml               # Docker Compose config
-├── Dockerfile                       # Docker image definition
-├── pom.xml                          # Maven dependencies
-├── README.md                        # This file
-├── LICENSE                          # MIT License
-└── .gitignore                       # Git ignore rules
+http://localhost:8080/swagger-ui.html
 ```
 
-## 🤝 Contributing
+### OpenAPI Specification
 
-Contributions are welcome! Please follow these steps:
+The OpenAPI 3.0 specification is available at:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```
+http://localhost:8080/v3/api-docs
+```
 
-### Development Guidelines
+### Available Endpoints
 
-- Follow Java coding conventions
-- Write unit tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting PR
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Health check endpoint |
+| GET | `/diagnostic` | System diagnostic information |
+| POST | `/api/assist` | Main assistance endpoint for all agent types |
 
-## 📝 License
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+
+- Development environment setup
+- Code style and conventions
+- Testing requirements
+- Pull request process
+- Issue reporting guidelines
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Security
 
-- **Google** for the Gemma 4 model
-- **NVIDIA** for providing the API infrastructure
-- **Spring Team** for the excellent Spring Boot framework
-- **OpenAPI Initiative** for API documentation standards
+For information on reporting security vulnerabilities, please see our [Security Policy](SECURITY.md).
 
-## 📞 Support
+## Code of Conduct
 
-- **Issues**: [GitHub Issues](https://github.com/<YOUR_USERNAME>/Gemma4-Code-Assistant-API/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/<YOUR_USERNAME>/Gemma4-Code-Assistant-API/discussions)
-
-## 🗺️ Roadmap
-
-- [ ] Add support for more AI models
-- [ ] Implement caching for common requests
-- [ ] Add rate limiting
-- [ ] Create Python SDK
-- [ ] Add WebSocket support for real-time streaming
-- [ ] Implement user authentication
-- [ ] Add metrics and monitoring dashboard
+This project adheres to a Code of Conduct that all contributors are expected to follow. Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) to understand the expectations for participation in this community.
 
 ---
 
-**Made with ❤️ using Spring Boot and Google Gemma 4**
-
+**Project Version**: 1.0.0  
+**Spring Boot Version**: 3.2.1  
+**Java Version**: 17

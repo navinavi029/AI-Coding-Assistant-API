@@ -1,136 +1,199 @@
-# Contributing to Gemma4-Code-Assistant-API
+# Contributing to Multi-Agent Coding Assistant
 
-Thank you for your interest in contributing! This document provides guidelines and instructions for contributing to this project.
+Thank you for your interest in contributing to the Multi-Agent Coding Assistant! We welcome contributions from the community and are grateful for your support. This document provides guidelines and instructions for contributing to the project.
 
-## Code of Conduct
+## Table of Contents
 
-By participating in this project, you agree to maintain a respectful and inclusive environment for everyone.
+- [Development Environment Setup](#development-environment-setup)
+- [Code Style and Conventions](#code-style-and-conventions)
+- [Testing Requirements](#testing-requirements)
+- [Pull Request Process](#pull-request-process)
+- [Issue Reporting Guidelines](#issue-reporting-guidelines)
+- [Code Review Process](#code-review-process)
+- [Code of Conduct](#code-of-conduct)
 
-## How to Contribute
-
-### Reporting Bugs
-
-Before creating bug reports, please check existing issues to avoid duplicates. When creating a bug report, include:
-
-- **Clear title and description**
-- **Steps to reproduce** the issue
-- **Expected behavior** vs actual behavior
-- **Environment details** (OS, Java version, etc.)
-- **Logs or error messages** if applicable
-
-### Suggesting Enhancements
-
-Enhancement suggestions are welcome! Please provide:
-
-- **Clear use case** for the enhancement
-- **Detailed description** of the proposed functionality
-- **Examples** of how it would work
-- **Potential implementation approach** (optional)
-
-### Pull Requests
-
-1. **Fork the repository** and create your branch from `main`
-2. **Make your changes** following our coding standards
-3. **Add tests** for new functionality
-4. **Update documentation** as needed
-5. **Ensure all tests pass** (`mvn test`)
-6. **Commit with clear messages** following conventional commits
-7. **Submit a pull request**
-
-## Development Setup
+## Development Environment Setup
 
 ### Prerequisites
 
-- Java 17+
-- Maven 3.6+
-- Git
-- NVIDIA API key
+Before you begin, ensure you have the following installed:
 
-### Local Development
+- **Java 17** or higher
+- **Maven 3.6+** for dependency management and building
+- **Docker** (optional, for containerized deployment)
+- **Git** for version control
+- A Java IDE (IntelliJ IDEA, Eclipse, or VS Code with Java extensions recommended)
 
+### Local Setup
+
+1. **Fork the repository** on GitHub
+
+2. **Clone your fork** to your local machine:
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/multi-agent-assistant.git
+   cd multi-agent-assistant
+   ```
+
+3. **Add the upstream repository** as a remote:
+   ```bash
+   git remote add upstream https://github.com/ORIGINAL-OWNER/multi-agent-assistant.git
+   ```
+
+4. **Configure environment variables**:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and add your NVIDIA API key:
+   ```
+   NVIDIA_API_KEY=your-actual-api-key-here
+   ```
+
+5. **Install dependencies and build**:
+   ```bash
+   mvn clean install
+   ```
+
+### Running the Application
+
+**Using Maven:**
 ```bash
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/Gemma4-Code-Assistant-API.git
-cd Gemma4-Code-Assistant-API
-
-# Create a branch
-git checkout -b feature/your-feature-name
-
-# Set up environment
-cp .env.example .env
-# Edit .env with your NVIDIA_API_KEY
-
-# Build and test
-mvn clean install
-mvn test
-
-# Run locally
 mvn spring-boot:run
 ```
 
-## Coding Standards
+**Using Docker:**
+```bash
+docker-compose up --build
+```
 
-### Java Style Guide
+The application will start on `http://localhost:8080`. You can access:
+- API endpoints at `http://localhost:8080/api/assist`
+- Swagger UI at `http://localhost:8080/swagger-ui.html`
+- Health check at `http://localhost:8080/health`
 
-- Follow [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
+## Code Style and Conventions
+
+### Java Coding Standards
+
+We follow the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) with some project-specific conventions:
+
+- **Indentation**: 4 spaces (no tabs)
+- **Line length**: Maximum 120 characters
+- **Braces**: Use K&R style (opening brace on same line)
+- **Imports**: No wildcard imports, organize imports alphabetically
+- **Javadoc**: Required for all public classes, methods, and fields
+
+### Package Structure
+
+The project follows a standard Spring Boot package structure:
+
+```
+com.assistant.multiagent
+├── client/          # External API clients (NVIDIA API)
+├── config/          # Configuration classes
+├── controller/      # REST API controllers
+├── exception/       # Exception handling
+├── model/           # Data models and DTOs
+└── service/         # Business logic and agent implementations
+```
+
+### Naming Conventions
+
+- **Classes**: PascalCase (e.g., `CodeGenerationAgent`)
+- **Methods**: camelCase (e.g., `processRequest`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `DEFAULT_TIMEOUT`)
+- **Variables**: camelCase (e.g., `apiResponse`)
+- **Packages**: lowercase (e.g., `com.assistant.multiagent.service`)
+
+### Code Quality
+
 - Use meaningful variable and method names
-- Add JavaDoc comments for public methods
-- Keep methods focused and concise
-- Use dependency injection via constructor
+- Keep methods focused and concise (ideally under 50 lines)
+- Avoid code duplication (DRY principle)
+- Use dependency injection via Spring's `@Autowired` or constructor injection
+- Handle exceptions appropriately with proper error messages
+- Add logging for important operations using SLF4J
 
-### Code Organization
+## Testing Requirements
 
-```java
-// Good example
-@Service
-public class CodeGenerationAgent implements Agent {
-    
-    private static final Logger logger = LoggerFactory.getLogger(CodeGenerationAgent.class);
-    private static final String SYSTEM_PROMPT = "...";
-    
-    private final NvidiaApiClient nvidiaApiClient;
-    private final AppConfig appConfig;
-    
-    public CodeGenerationAgent(NvidiaApiClient nvidiaApiClient, AppConfig appConfig) {
-        this.nvidiaApiClient = nvidiaApiClient;
-        this.appConfig = appConfig;
-    }
-    
-    @Override
-    public AssistResponse process(String prompt, boolean streaming) {
-        logger.info("Processing request");
-        // Implementation
-    }
-}
+### Unit Test Requirements
+
+All code changes must include appropriate tests:
+
+- **New features**: Must include unit tests covering main functionality and edge cases
+- **Bug fixes**: Must include a test that reproduces the bug and verifies the fix
+- **Refactoring**: Existing tests must continue to pass
+
+### Test Coverage
+
+- Aim for at least **80% code coverage** for new code
+- Critical business logic should have **90%+ coverage**
+- Use JUnit 5 for unit tests
+- Use Mockito for mocking dependencies
+- Use MockWebServer for testing HTTP clients
+
+### Running Tests
+
+**Run all tests:**
+```bash
+mvn test
 ```
 
-### Testing Standards
-
-- Write unit tests for all new functionality
-- Aim for >80% code coverage
-- Use meaningful test names: `shouldReturnErrorWhenApiKeyIsMissing()`
-- Mock external dependencies
-- Test both success and failure scenarios
-
-```java
-@Test
-void shouldGenerateCodeSuccessfully() {
-    // Given
-    String prompt = "Write a hello world function";
-    
-    // When
-    AssistResponse response = agent.process(prompt, false);
-    
-    // Then
-    assertNotNull(response.getContent());
-    assertEquals("CODE_GENERATION", response.getAgentType());
-    assertNull(response.getError());
-}
+**Run specific test class:**
+```bash
+mvn test -Dtest=NvidiaApiClientTest
 ```
 
-## Commit Message Guidelines
+**Run tests with coverage report:**
+```bash
+mvn clean test jacoco:report
+```
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+Coverage reports will be generated in `target/site/jacoco/index.html`.
+
+### Test Organization
+
+- Place tests in `src/test/java` mirroring the source structure
+- Name test classes with `Test` suffix (e.g., `NvidiaApiClientTest`)
+- Use descriptive test method names (e.g., `testProcessRequestWithValidInput`)
+- Group related tests using nested test classes with `@Nested`
+
+## Pull Request Process
+
+### Fork and Clone Workflow
+
+1. **Create a feature branch** from `main`:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make your changes** and commit them with clear messages
+
+3. **Keep your branch updated** with upstream:
+   ```bash
+   git fetch upstream
+   git rebase upstream/main
+   ```
+
+4. **Push to your fork**:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+5. **Open a Pull Request** on GitHub
+
+### Branch Naming Conventions
+
+Use descriptive branch names with prefixes:
+
+- `feature/` - New features (e.g., `feature/add-code-optimization-agent`)
+- `bugfix/` - Bug fixes (e.g., `bugfix/fix-null-pointer-in-orchestrator`)
+- `docs/` - Documentation updates (e.g., `docs/update-api-examples`)
+- `refactor/` - Code refactoring (e.g., `refactor/simplify-agent-interface`)
+- `test/` - Test additions or improvements (e.g., `test/add-integration-tests`)
+
+### Commit Message Format
+
+Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
 ```
 <type>(<scope>): <subject>
@@ -140,65 +203,112 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 <footer>
 ```
 
-### Types
-
+**Types:**
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
+- `style`: Code style changes (formatting, no logic change)
 - `refactor`: Code refactoring
 - `test`: Adding or updating tests
 - `chore`: Maintenance tasks
 
-### Examples
-
+**Example:**
 ```
 feat(agent): add code optimization agent
 
-Add new agent specialized in code optimization and performance improvements.
-Includes system prompt and integration with orchestrator.
+Implement a new agent that analyzes code and suggests optimizations
+for performance and readability.
 
 Closes #123
 ```
 
-```
-fix(client): handle timeout errors gracefully
+### Pull Request Checklist
 
-Improve error handling for NVIDIA API timeouts by adding retry logic
-and better error messages.
+Before submitting your PR, ensure:
 
-Fixes #456
-```
-
-## Documentation
-
-- Update README.md for user-facing changes
-- Add JavaDoc comments for public APIs
-- Update API documentation in Swagger annotations
-- Include code examples for new features
-
-## Testing Checklist
-
-Before submitting a PR, ensure:
-
-- [ ] All tests pass (`mvn test`)
-- [ ] Code compiles without warnings (`mvn clean compile`)
-- [ ] New functionality has tests
-- [ ] Documentation is updated
-- [ ] Code follows style guidelines
+- [ ] Code follows the project's style guidelines
+- [ ] Self-review of code completed
+- [ ] Comments added for complex logic
+- [ ] Documentation updated (if applicable)
+- [ ] Tests added or updated
+- [ ] All tests pass locally
+- [ ] No new warnings or errors introduced
 - [ ] Commit messages follow conventions
-- [ ] No sensitive data (API keys, etc.) in commits
+- [ ] Branch is up-to-date with main
 
-## Review Process
+## Issue Reporting Guidelines
 
-1. **Automated checks** run on PR submission
-2. **Code review** by maintainers
-3. **Feedback addressed** by contributor
-4. **Approval and merge** by maintainers
+### Using Issue Templates
 
-## Questions?
+When reporting issues, please use the appropriate template:
 
-- Open a [GitHub Discussion](https://github.com/YOUR_USERNAME/Gemma4-Code-Assistant-API/discussions)
-- Create an [Issue](https://github.com/YOUR_USERNAME/Gemma4-Code-Assistant-API/issues)
+- **Bug Report**: For reporting bugs or unexpected behavior
+- **Feature Request**: For suggesting new features or enhancements
 
-Thank you for contributing! 🎉
+### Providing Necessary Information
+
+**For Bug Reports:**
+- Clear description of the issue
+- Steps to reproduce the problem
+- Expected vs. actual behavior
+- Environment details (OS, Java version, etc.)
+- Relevant logs or error messages
+- Screenshots (if applicable)
+
+**For Feature Requests:**
+- Problem description (what need does this address?)
+- Proposed solution
+- Alternative solutions considered
+- Additional context or examples
+
+### Before Submitting an Issue
+
+1. **Search existing issues** to avoid duplicates
+2. **Check the documentation** to ensure it's not a usage question
+3. **Verify the issue** with the latest version
+4. **Provide minimal reproduction** if reporting a bug
+
+## Code Review Process
+
+### Review Criteria
+
+Pull requests will be reviewed based on:
+
+- **Functionality**: Does the code work as intended?
+- **Code Quality**: Is the code clean, readable, and maintainable?
+- **Testing**: Are there adequate tests with good coverage?
+- **Documentation**: Is the code properly documented?
+- **Style**: Does the code follow project conventions?
+- **Performance**: Are there any performance concerns?
+- **Security**: Are there any security vulnerabilities?
+
+### Response Expectations
+
+- **Initial Review**: Within 2-3 business days
+- **Follow-up Reviews**: Within 1-2 business days after updates
+- **Merge Decision**: After approval from at least one maintainer
+
+### Addressing Review Feedback
+
+- Respond to all review comments
+- Make requested changes in new commits (don't force-push during review)
+- Mark conversations as resolved after addressing them
+- Request re-review after making changes
+
+### Review Etiquette
+
+- Be respectful and constructive in feedback
+- Assume good intentions
+- Focus on the code, not the person
+- Provide specific, actionable suggestions
+- Acknowledge good work and improvements
+
+## Code of Conduct
+
+This project adheres to a Code of Conduct that all contributors are expected to follow. Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) to understand the standards of behavior we expect from our community.
+
+By participating in this project, you agree to abide by its terms.
+
+---
+
+Thank you for contributing to the Multi-Agent Coding Assistant! Your efforts help make this project better for everyone.
