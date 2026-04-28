@@ -1,5 +1,0 @@
-{
-  "prompt": "Write a simple hello world function in Java",
-  "agentType": "CODE_GENERATION",
-  "streaming": false
-}

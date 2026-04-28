@@ -43,7 +43,7 @@ public class DiagnosticController {
                     ))
                     .retrieve()
                     .bodyToMono(String.class)
-                    .timeout(Duration.ofSeconds(10))
+                    .timeout(Duration.ofSeconds(appConfig.getRequestTimeoutSeconds()))
                     .block();
             
             long endTime = System.currentTimeMillis();

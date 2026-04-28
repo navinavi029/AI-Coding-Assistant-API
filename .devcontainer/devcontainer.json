@@ -1,0 +1,51 @@
+{
+  "name": "Multi-Agent Coding Assistant",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installMaven": "true",
+      "installGradle": "false"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropics.claude-code",
+        "anthropics.skills",
+        "trailofbits.skills",
+        "trailofbits.skills-curated",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-spring-boot-dashboard",
+        "vmware.vscode-spring-boot",
+        "vscjava.vscode-maven"
+      ],
+      "settings": {
+        "java.configuration.runtimes": [
+          {
+            "name": "JavaSE-17",
+            "path": "/usr/local/sdkman/candidates/java/current",
+            "default": true
+          }
+        ],
+        "[java]": {
+          "editor.defaultFormatter": "redhat.java"
+        },
+        "java.format.settings.url": ".vscode/java-formatter.xml",
+        "java.saveActions.organizeImports": true
+      }
+    }
+  },
+  "mounts": [
+    "source=multi-agent-assistant-maven-${devcontainerId},target=/home/vscode/.m2,type=volume",
+    "source=multi-agent-assistant-vscode-${devcontainerId},target=/home/vscode/.vscode-server,type=volume"
+  ],
+  "postCreateCommand": "uv run /opt/post_install.py && mvn dependency:go-offline",
+  "remoteUser": "vscode",
+  "capAdd": [
+    "NET_ADMIN"
+  ]
+}

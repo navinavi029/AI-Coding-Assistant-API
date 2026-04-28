@@ -23,8 +23,7 @@ public class OpenApiConfig {
                                 .name("Multi-Agent Assistant")
                                 .url("https://github.com/your-repo")))
                 .servers(List.of(
-                        new Server().url("http://localhost:8081").description("Local Development Server"),
-                        new Server().url("http://localhost:8080").description("Default Server")
+                        new Server().url("http://localhost:8080").description("Local Development Server")
                 ));
     }
 }

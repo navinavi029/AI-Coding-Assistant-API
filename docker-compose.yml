@@ -7,10 +7,10 @@ services:
       - "8080:8080"
     environment:
       - NVIDIA_API_KEY=${NVIDIA_API_KEY}
-      - NVIDIA_API_URL=https://integrate.api.nvidia.com/v1/chat/completions
-      - NVIDIA_MODEL=google/gemma-4-31b-it
-      - SERVER_PORT=8080
-      - REQUEST_TIMEOUT_SECONDS=60
+      - NVIDIA_API_URL=${NVIDIA_API_URL:-https://integrate.api.nvidia.com/v1/chat/completions}
+      - NVIDIA_MODEL=${NVIDIA_MODEL:-meta/llama-3.1-8b-instruct}
+      - SERVER_PORT=${SERVER_PORT:-8080}
+      - REQUEST_TIMEOUT_SECONDS=${REQUEST_TIMEOUT_SECONDS:-120}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/v1/health"]

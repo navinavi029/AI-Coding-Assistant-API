@@ -107,10 +107,11 @@ coverage/
 # Kiro
 .kiro/
 
-# Test scripts (optional - remove if you want to commit them)
+# Test scripts and test data files
 test_*.ps1
 test_*.py
 test_*.sh
+test_*.json
 
 # Documentation build artifacts
 docs/_build/

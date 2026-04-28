@@ -7,117 +7,78 @@
 
 ## Overview
 
-The Multi-Agent Coding Assistant is an intelligent Java-based application that leverages multiple specialized AI agents to provide comprehensive coding assistance. Built with Spring Boot and integrated with NVIDIA's AI API, this system orchestrates different agents to handle code generation, code review, and code explanation tasks efficiently.
-
-The application uses a multi-agent architecture where each agent specializes in a specific domain of coding assistance. The orchestrator intelligently routes requests to the appropriate agent based on the task type, ensuring optimal performance and accuracy. This modular design allows for easy extension and maintenance while providing a unified API interface for all coding assistance operations.
-
-Whether you're generating new code, reviewing existing implementations, or seeking explanations for complex code structures, the Multi-Agent Coding Assistant provides AI-powered support through a simple REST API, making it easy to integrate into your development workflow.
+An intelligent Java-based application that leverages multiple specialized AI agents to provide comprehensive coding assistance. Built with Spring Boot and integrated with NVIDIA's AI API, this system orchestrates different agents to handle code generation, code review, and code explanation tasks efficiently.
 
 ## Features
 
-- **Code Generation**: Generate code snippets, functions, and complete implementations based on natural language descriptions
-- **Code Review**: Automated code review with suggestions for improvements, best practices, and potential issues
-- **Code Explanation**: Detailed explanations of code functionality, logic flow, and design patterns
-- **NVIDIA API Integration**: Powered by NVIDIA's advanced AI models for high-quality responses
-- **Multi-Agent Orchestration**: Intelligent routing to specialized agents for optimal task handling
-- **RESTful API**: Simple HTTP endpoints for easy integration
-- **Docker Support**: Containerized deployment for consistent environments
-- **OpenAPI Documentation**: Interactive API documentation via Swagger UI
-
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Docker Deployment](#docker-deployment)
-- [Development Setup](#development-setup)
-- [Testing](#testing)
-- [API Documentation](#api-documentation)
-- [Contributing](#contributing)
-- [License](#license)
-- [Security](#security)
-- [Code of Conduct](#code-of-conduct)
+- **Code Generation** - Generate code snippets, functions, and complete implementations
+- **Code Review** - Automated code review with suggestions and best practices
+- **Code Explanation** - Detailed explanations of code functionality and design patterns
+- **NVIDIA API Integration** - Powered by NVIDIA's advanced AI models
+- **Multi-Agent Orchestration** - Intelligent routing to specialized agents
+- **RESTful API** - Simple HTTP endpoints for easy integration
+- **Docker Support** - Containerized deployment
+- **OpenAPI Documentation** - Interactive API documentation via Swagger UI
 
 ## Prerequisites
 
-Before running the Multi-Agent Coding Assistant, ensure you have the following installed:
+- **Docker Desktop** - [Download here](https://www.docker.com/products/docker-desktop)
+- **NVIDIA API Key** - [Get your key here](https://build.nvidia.com/)
 
-- **Java 17** or higher
-- **Maven 3.6+** for dependency management and building
-- **Docker** (optional, for containerized deployment)
-- **NVIDIA API Key** for AI model access
+## Quick Start
 
-## Installation
+### One-Click Setup (Recommended)
 
-### Step 1: Clone the Repository
-
-```bash
-git clone https://github.com/yourusername/multi-agent-assistant.git
-cd multi-agent-assistant
+```batch
+setup.bat
 ```
 
-### Step 2: Configure Environment Variables
+On first run, you'll be prompted for your NVIDIA API key.
 
-Copy the example environment file and configure your NVIDIA API key:
+**Options:**
+- `setup.bat` - Normal build and start
+- `setup.bat rebuild` - Force rebuild of Docker image
 
-```bash
-cp .env.example .env
-```
+### Manual Setup
 
-Edit `.env` and add your NVIDIA API key:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/multi-agent-assistant.git
+   cd multi-agent-assistant
+   ```
 
-```
-NVIDIA_API_KEY=your_nvidia_api_key_here
-```
+2. **Configure environment**
+   ```bash
+   copy .env.example .env
+   ```
+   Edit `.env` and add your NVIDIA API key.
 
-### Step 3: Build the Project
-
-```bash
-mvn clean install
-```
-
-### Step 4: Run the Application
-
-```bash
-mvn spring-boot:run
-```
+3. **Build and run**
+   ```bash
+   docker-compose up -d
+   ```
 
 The application will start on `http://localhost:8080`.
 
 ## Configuration
 
-The application uses environment variables for configuration. All available variables are documented in `.env.example`:
-
 | Variable | Description | Required | Default |
 |----------|-------------|----------|---------|
-| `NVIDIA_API_KEY` | Your NVIDIA API key for AI model access | Yes | - |
-| `NVIDIA_API_URL` | NVIDIA API endpoint URL | No | `https://integrate.api.nvidia.com/v1` |
+| `NVIDIA_API_KEY` | Your NVIDIA API key | Yes | - |
+| `NVIDIA_API_URL` | NVIDIA API endpoint | No | `https://integrate.api.nvidia.com/v1` |
 | `NVIDIA_MODEL` | AI model to use | No | `meta/llama-3.1-8b-instruct` |
-| `SERVER_PORT` | Application server port | No | `8080` |
-| `LOG_LEVEL` | Logging level (DEBUG, INFO, WARN, ERROR) | No | `INFO` |
+| `SERVER_PORT` | Application port | No | `8080` |
+| `LOG_LEVEL` | Logging level | No | `INFO` |
 
 ## Usage
 
 ### Health Check
 
-Check if the application is running:
-
 ```bash
 curl http://localhost:8080/health
 ```
 
-Response:
-```json
-{
-  "status": "UP",
-  "timestamp": "2024-01-15T10:30:00Z"
-}
-```
-
 ### Code Generation
-
-Generate code based on a description:
 
 ```bash
 curl -X POST http://localhost:8080/api/assist \
@@ -128,18 +89,7 @@ curl -X POST http://localhost:8080/api/assist \
   }'
 ```
 
-Response:
-```json
-{
-  "agentType": "CODE_GENERATION",
-  "response": "public static long factorial(int n) {\n    if (n < 0) throw new IllegalArgumentException(\"n must be non-negative\");\n    if (n == 0 || n == 1) return 1;\n    long result = 1;\n    for (int i = 2; i <= n; i++) {\n        result *= i;\n    }\n    return result;\n}",
-  "timestamp": "2024-01-15T10:35:00Z"
-}
-```
-
 ### Code Review
-
-Request a code review:
 
 ```bash
 curl -X POST http://localhost:8080/api/assist \
@@ -150,18 +100,7 @@ curl -X POST http://localhost:8080/api/assist \
   }'
 ```
 
-Response:
-```json
-{
-  "agentType": "CODE_REVIEW",
-  "response": "Issues found:\n1. NullPointerException risk: Variable 's' is initialized to null and immediately dereferenced.\n2. Missing null check before calling s.length().\n\nSuggestions:\n- Add null validation\n- Consider using Optional<String>\n- Add proper error handling",
-  "timestamp": "2024-01-15T10:40:00Z"
-}
-```
-
 ### Code Explanation
-
-Get an explanation of code:
 
 ```bash
 curl -X POST http://localhost:8080/api/assist \
@@ -172,57 +111,35 @@ curl -X POST http://localhost:8080/api/assist \
   }'
 ```
 
-Response:
-```json
-{
-  "agentType": "CODE_EXPLANATION",
-  "response": "This code uses Java Streams to transform a collection:\n1. Stream.of(1,2,3) creates a stream of integers\n2. map(x -> x * 2) applies a transformation, multiplying each element by 2\n3. collect(Collectors.toList()) gathers results into a List\n\nResult: [2, 4, 6]\n\nThis is a functional programming approach for data transformation.",
-  "timestamp": "2024-01-15T10:45:00Z"
-}
-```
-
-## Docker Deployment
-
-### Build Docker Image
+## Docker Commands
 
 ```bash
-docker build -t multi-agent-assistant:1.0.0 .
-```
-
-### Run with Docker Compose
-
-```bash
+# Start
+setup.bat
+# or
 docker-compose up -d
-```
 
-This will start the application on port 8080. The docker-compose configuration includes:
-- Automatic restart on failure
-- Environment variable configuration
-- Health check monitoring
-- Volume mounting for logs
-
-### Stop the Container
-
-```bash
+# Stop
+stop.bat
+# or
 docker-compose down
+
+# View logs
+docker-compose logs -f
+
+# Restart
+docker-compose restart
+
+# Rebuild
+setup.bat rebuild
 ```
 
-## Development Setup
+## API Documentation
 
-### Local Development Environment
+- **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+- **OpenAPI Spec**: `http://localhost:8080/v3/api-docs`
 
-1. **Import into IDE**: Import the project as a Maven project into your preferred IDE (IntelliJ IDEA, Eclipse, VS Code)
-
-2. **Configure Run Configuration**: Set up a run configuration with the following VM options:
-   ```
-   -Dspring.profiles.active=dev
-   ```
-
-3. **Enable Hot Reload**: Use Spring Boot DevTools for automatic restart on code changes (already included in dependencies)
-
-4. **Run in Debug Mode**: Start the application in debug mode to enable breakpoints and step-through debugging
-
-### Project Structure
+## Project Structure
 
 ```
 src/
@@ -238,87 +155,181 @@ src/
 │       ├── application.yml  # Application configuration
 │       └── logback-spring.xml  # Logging configuration
 └── test/
-    └── java/com/assistant/multiagent/  # Unit and integration tests
+    └── java/com/assistant/multiagent/  # Tests
 ```
 
-## Testing
+## Development
 
-### Run All Tests
+### Running Tests
 
 ```bash
-mvn test
+# In Docker
+docker-compose exec app mvn test
+
+# Specific test
+docker-compose exec app mvn test -Dtest=NvidiaApiClientTest
+
+# With coverage
+docker-compose exec app mvn clean test jacoco:report
 ```
 
-### Run Specific Test Class
+### Code Style
 
-```bash
-mvn test -Dtest=NvidiaApiClientTest
-```
+- Follow [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
+- Indentation: 4 spaces
+- Line length: 120 characters max
+- Javadoc required for public classes and methods
 
-### Run Tests with Coverage
+### Making Changes
 
-```bash
-mvn clean test jacoco:report
-```
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Make changes and test
+3. Rebuild: `setup.bat rebuild`
+4. Test via Swagger UI: `http://localhost:8080/swagger-ui.html`
 
-Coverage reports will be generated in `target/site/jacoco/index.html`.
+## Troubleshooting
 
-### Test Categories
+### NVIDIA API Connection Issues
 
-- **Unit Tests**: Test individual components in isolation
-- **Integration Tests**: Test component interactions and API integration
-- **Controller Tests**: Test REST endpoints with MockMvc
+If you get timeout errors:
 
-## API Documentation
+1. **Verify API key activation**
+   - Go to https://build.nvidia.com
+   - Sign in and navigate to your model page
+   - Accept Terms of Service if prompted
+   - Verify API access is activated
 
-### Swagger UI
+2. **Test API key**
+   - Use the Playground feature on NVIDIA's website
+   - If it works there, the key is valid
 
-Interactive API documentation is available at:
+3. **Check API key format**
+   - Should start with `nvapi-`
+   - No extra spaces or quotes in `.env`
+   - Use the latest key (not expired)
 
-```
-http://localhost:8080/swagger-ui.html
-```
+4. **Generate new API key**
+   - Go to https://build.nvidia.com
+   - Generate a new key
+   - Update `.env` file
+   - Restart: `docker-compose restart`
 
-### OpenAPI Specification
+5. **Try alternative model**
+   ```
+   NVIDIA_MODEL=meta/llama-3.1-8b-instruct
+   ```
 
-The OpenAPI 3.0 specification is available at:
+6. **Test connection**
+   - Open: http://localhost:8080/swagger-ui.html
+   - Find "Diagnostic" section
+   - Execute "GET /api/v1/diagnostic/test-nvidia-connection"
 
-```
-http://localhost:8080/v3/api-docs
-```
+### Common Errors
 
-### Available Endpoints
+- **TimeoutException** → API key not activated or network issue
+- **401 Unauthorized** → Invalid API key
+- **403 Forbidden** → No access to this model
+- **429 Too Many Requests** → Rate limit exceeded
+- **500 Internal Server Error** → NVIDIA API issue (retry later)
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check endpoint |
-| GET | `/diagnostic` | System diagnostic information |
-| POST | `/api/assist` | Main assistance endpoint for all agent types |
+## Security
+
+### Best Practices
+
+- Keep NVIDIA API key secure, never commit to version control
+- Use environment variables for sensitive configuration
+- Run with minimal required permissions
+- Use HTTPS for API communications
+- Implement rate limiting for production
+- Regularly review logs for suspicious activity
+
+### Reporting Vulnerabilities
+
+**Do NOT report security vulnerabilities through public GitHub issues.**
+
+Report via:
+1. GitHub Security Advisories (preferred)
+2. Email to project maintainers with "SECURITY" in subject
+
+Include:
+- Vulnerability type and location
+- Steps to reproduce
+- Proof-of-concept (if possible)
+- Impact assessment
+
+**Response timeline:**
+- Initial response: 48 hours
+- Status updates: Every 7 days
+- Resolution: Within 30 days for critical issues
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+Contributions are welcome! Please follow these guidelines:
 
-- Development environment setup
-- Code style and conventions
-- Testing requirements
-- Pull request process
-- Issue reporting guidelines
+### Setup
+
+1. Fork the repository
+2. Clone your fork
+3. Create a feature branch
+4. Make changes with tests
+5. Submit a pull request
+
+### Branch Naming
+
+- `feature/` - New features
+- `bugfix/` - Bug fixes
+- `docs/` - Documentation
+- `refactor/` - Code refactoring
+- `test/` - Test improvements
+
+### Commit Messages
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+Example:
+```
+feat(agent): add code optimization agent
+
+Implement a new agent that analyzes code and suggests optimizations.
+
+Closes #123
+```
+
+### Pull Request Checklist
+
+- [ ] Code follows style guidelines
+- [ ] Self-review completed
+- [ ] Comments added for complex logic
+- [ ] Documentation updated
+- [ ] Tests added/updated
+- [ ] All tests pass
+- [ ] No new warnings
+- [ ] Commit messages follow conventions
+- [ ] Branch up-to-date with main
+
+### Testing Requirements
+
+- New features must include unit tests
+- Bug fixes must include reproduction test
+- Aim for 80%+ code coverage
+- Use JUnit 5 and Mockito
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Security
-
-For information on reporting security vulnerabilities, please see our [Security Policy](SECURITY.md).
-
-## Code of Conduct
-
-This project adheres to a Code of Conduct that all contributors are expected to follow. Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) to understand the expectations for participation in this community.
-
 ---
 
-**Project Version**: 1.0.0  
-**Spring Boot Version**: 3.2.1  
-**Java Version**: 17
+**Version**: 1.0.0  
+**Spring Boot**: 3.2.1  
+**Java**: 17
