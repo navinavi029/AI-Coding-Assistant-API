@@ -16,11 +16,11 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("General Coding Assistant API")
+                        .title("AI Coding Assistant API")
                         .version("1.0.0")
                         .description("Multi-agent coding assistance through specialized agents using NVIDIA AI")
                         .contact(new Contact()
-                                .name("General Coding Assistant")
+                                .name("AI Coding Assistant")
                                 .url("https://github.com/navinavi029/general-coding-assistant-api")))
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("Local Development Server")

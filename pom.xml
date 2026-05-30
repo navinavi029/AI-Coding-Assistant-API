@@ -15,7 +15,7 @@
     <groupId>com.assistant</groupId>
     <artifactId>general-coding-assistant</artifactId>
     <version>1.0.0</version>
-    <name>General Coding Assistant API</name>
+    <name>AI Coding Assistant API</name>
     <description>Multi-agent coding assistant API with NVIDIA AI integration</description>
 
     <properties>

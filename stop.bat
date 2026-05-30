@@ -1,6 +1,6 @@
 @echo off
 REM ============================================
-REM General Coding Assistant - Stop Script
+REM AI Coding Assistant - Stop Script
 REM ============================================
 
 echo.

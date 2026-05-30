@@ -1,4 +1,4 @@
-# AGENTS.md — General Coding Assistant API
+# AGENTS.md — AI Coding Assistant API
 
 ## Quick start
 

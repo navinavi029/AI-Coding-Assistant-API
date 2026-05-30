@@ -45,7 +45,7 @@ public class MultiAgentAssistantApplication {
             String port = environment.getProperty("server.port", "8080");
             
             logger.info("=".repeat(60));
-            logger.info("General Coding Assistant API started successfully!");
+            logger.info("AI Coding Assistant API started successfully!");
             logger.info("=".repeat(60));
             logger.info("Server running on port: {}", port);
             logger.info("Available endpoints:");
