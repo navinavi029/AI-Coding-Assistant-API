@@ -21,7 +21,7 @@ public class OpenApiConfig {
                         .description("Multi-agent coding assistance through specialized agents using NVIDIA AI")
                         .contact(new Contact()
                                 .name("AI Coding Assistant")
-                                .url("https://github.com/navinavi029/general-coding-assistant-api")))
+                                .url("https://github.com/navinavi029/AI-Coding-Assistant-API")))
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("Local Development Server")
                 ));
