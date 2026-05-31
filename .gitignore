@@ -110,6 +110,7 @@ coverage/
 # Claude / IDE config
 .claude/
 CLAUDE.md
+AGENTS.md
 
 # Node (gitnexus tooling)
 node_modules/
