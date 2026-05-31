@@ -27,17 +27,25 @@ A multi-agent coding assistant API powered by NVIDIA's AI models. Built with Spr
 
 ## Quick Start
 
-### One-Click Setup (Recommended)
+### One-Click (Recommended)
 
 ```batch
-setup.bat
+run.bat
 ```
 
-On first run, you'll be prompted for your NVIDIA API key.
+Starts Docker if needed → starts existing container or runs full setup → opens Swagger UI.
 
-**Options:**
-- `setup.bat` - Normal build and start
-- `setup.bat rebuild` - Force rebuild of Docker image
+**Other commands:**
+| Command | What it does |
+|---------|-------------|
+| `run.bat` | Start or resume the app |
+| `setup.bat` | Full setup (prompt for API key, build, start) |
+| `setup.bat rebuild` | Force clean rebuild |
+| `stop.bat` | Stop the container |
+
+### First Time
+
+Just run `run.bat` — it will detect no container exists and delegate to `setup.bat`, which prompts for your NVIDIA API key.
 
 ### Manual Setup
 
@@ -55,7 +63,7 @@ On first run, you'll be prompted for your NVIDIA API key.
 
 3. **Build and run**
    ```bash
-   setup.bat
+   run.bat
    ```
 
 The application will start on `http://localhost:8080`.
@@ -111,30 +119,30 @@ curl -X POST http://localhost:8080/api/v1/assist \
   }'
 ```
 
-## Docker Commands
+## Scripts Reference
 
 ```bash
-# Start
-setup.bat
-# or
-docker-compose up -d
+# Quick start (recommended)
+run.bat
 
-# Stop
+# Full setup (first time or rebuild)
+setup.bat          # normal build
+setup.bat rebuild  # force clean build
+
+# Stop container (keeps it for quick restart)
 stop.bat
 
-# View logs
+# Docker-native commands
+docker-compose up -d
+docker-compose stop
+docker-compose start
 docker-compose logs -f
-
-# Restart
 docker-compose restart
-
-# Rebuild
-setup.bat rebuild
 ```
 
 ## API Documentation
 
-- **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+- **Swagger UI**: `http://localhost:8080/swagger-ui/index.html`
 - **OpenAPI Spec**: `http://localhost:8080/v3/api-docs`
 
 ## Project Structure
@@ -218,7 +226,7 @@ If you get timeout errors:
    ```
 
 6. **Test connection**
-   - Open: http://localhost:8080/swagger-ui.html
+   - Open: http://localhost:8080/swagger-ui/index.html
    - Find "Diagnostic" section
    - Execute "GET /api/v1/diagnostic/test-nvidia-connection"
 

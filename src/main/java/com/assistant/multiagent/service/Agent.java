@@ -13,13 +13,11 @@ public interface Agent {
 
     /**
      * Processes a user prompt and returns a structured response.
-     * This method handles both streaming and non-streaming modes based on the streaming parameter.
      *
      * @param prompt the user's coding question or task
-     * @param streaming whether to use streaming mode
      * @return an AssistResponse containing the AI-generated content and metadata
      */
-    AssistResponse process(String prompt, boolean streaming);
+    AssistResponse process(String prompt);
 
     /**
      * Processes a user prompt in streaming mode and returns a reactive stream of response chunks.

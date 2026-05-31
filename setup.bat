@@ -128,8 +128,8 @@ if %ERRORLEVEL% equ 0 (
     echo   Started successfully!
     echo.
     echo   API:      http://localhost:8080
-    echo   Swagger:  http://localhost:8080/swagger-ui.html
-    echo   Health:   http://localhost:8080/health
+    echo   Swagger:  http://localhost:8080/swagger-ui/index.html
+    echo   Health:   http://localhost:8080/api/v1/health
     echo.
     echo   Stop:     docker-compose down
     echo =============================================
@@ -137,7 +137,7 @@ if %ERRORLEVEL% equ 0 (
     echo Waiting for application to be ready...
     timeout /t 5 /nobreak >nul
     echo Opening Swagger UI in browser...
-    start http://localhost:8080/swagger-ui.html
+    start http://localhost:8080/swagger-ui/index.html
     echo.
     pause
     exit /b 0

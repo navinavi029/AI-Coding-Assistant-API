@@ -52,17 +52,9 @@ public class CodeReviewAgent implements Agent {
         return SYSTEM_PROMPT;
     }
 
-    /**
-     * Processes a user prompt and returns a structured response.
-     * Prepends the system prompt to the user prompt before calling the NVIDIA API.
-     *
-     * @param prompt the user's code to review
-     * @param streaming whether to use streaming mode (ignored for this method)
-     * @return an AssistResponse containing the code review feedback and metadata
-     */
     @Override
-    public AssistResponse process(String prompt, boolean streaming) {
-        logger.info("Processing code review request - Streaming: {}", streaming);
+    public AssistResponse process(String prompt) {
+        logger.info("Processing code review request");
 
         try {
             // Build request with system prompt prepended

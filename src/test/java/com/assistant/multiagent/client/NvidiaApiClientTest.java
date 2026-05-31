@@ -158,8 +158,7 @@ class NvidiaApiClientTest {
     }
 
     @Test
-    void testSendRequestStreaming_SetsStreamParameterToTrue() {
-        // Arrange
+    void testSendRequestStreaming_DoesNotMutateRequest() {
         mockWebServer.enqueue(new MockResponse()
                 .setBody("data: {\"chunk\": \"test\"}\n\n")
                 .setHeader("Content-Type", "text/event-stream"));
@@ -167,15 +166,13 @@ class NvidiaApiClientTest {
         NvidiaRequest request = NvidiaRequest.builder()
                 .model("google/gemma-4-31b-it")
                 .addUserMessage("Hello")
-                .stream(false) // Intentionally set to false to verify it gets overridden
+                .stream(false)
                 .build();
 
-        // Act
         client.sendRequestStreaming(request)
-                .blockFirst(); // Block to trigger the request
+                .blockFirst();
 
-        // Assert - verify the stream parameter was set to true
-        assertTrue(request.isStream(), "Stream parameter should be set to true for streaming requests");
+        assertFalse(request.isStream(), "sendRequestStreaming should not mutate the request object");
     }
 
     @Test

@@ -64,7 +64,7 @@ public class AgentOrchestrator {
             throw new IllegalArgumentException("Invalid agent type: " + agentType);
         }
 
-        return agent.process(request.getPrompt(), request.isStreaming());
+        return agent.process(request.getPrompt());
     }
 
     /**

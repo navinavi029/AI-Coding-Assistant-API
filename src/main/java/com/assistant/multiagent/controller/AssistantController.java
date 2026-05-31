@@ -113,6 +113,14 @@ public class AssistantController {
                         .event("message")
                         .data(chunk)
                         .build())
+                .onErrorResume(error -> {
+                    logger.error("Error during streaming assist request - agentType: {}, error: {}",
+                            request.getAgentType(), error.getMessage(), error);
+                    return Flux.just(ServerSentEvent.<String>builder()
+                            .event("error")
+                            .data("{\"error\": \"" + error.getMessage() + "\"}")
+                            .build());
+                })
                 .concatWith(Flux.just(
                         ServerSentEvent.<String>builder()
                                 .event("done")
@@ -120,8 +128,6 @@ public class AssistantController {
                                 .build()
                 ))
                 .doOnComplete(() -> logger.info("Completed streaming assist request - agentType: {}", 
-                                                request.getAgentType()))
-                .doOnError(error -> logger.error("Error during streaming assist request - agentType: {}, error: {}", 
-                                                 request.getAgentType(), error.getMessage()));
+                                                request.getAgentType()));
     }
 }

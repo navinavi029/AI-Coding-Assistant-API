@@ -107,6 +107,15 @@ coverage/
 # Kiro
 .kiro/
 
+# Claude / IDE config
+.claude/
+CLAUDE.md
+
+# Node (gitnexus tooling)
+node_modules/
+package.json
+package-lock.json
+
 # Test scripts and test data files
 test_*.ps1
 test_*.py

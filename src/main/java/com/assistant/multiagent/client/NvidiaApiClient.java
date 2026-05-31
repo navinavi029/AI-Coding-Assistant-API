@@ -123,9 +123,6 @@ public class NvidiaApiClient {
      * @return a Flux of response chunks
      */
     public Flux<String> sendRequestStreaming(NvidiaRequest request) {
-        // Ensure stream parameter is set to true for streaming requests (Requirement 9.1)
-        request.setStream(true);
-        
         logger.info("Sending streaming request to NVIDIA API - Model: {}", request.getModel());
         
         return webClient.post()
@@ -163,8 +160,8 @@ public class NvidiaApiClient {
                 .onErrorMap(WebClientRequestException.class, e -> 
                     new NvidiaApiException("Service temporarily unavailable", 503, e)
                 )
-                .onErrorMap(NvidiaApiException.class, e -> e)
                 .onErrorMap(e -> {
+                    if (e instanceof NvidiaApiException) return (NvidiaApiException) e;
                     if (e.getCause() instanceof TimeoutException || 
                         (e.getMessage() != null && e.getMessage().contains("timeout"))) {
                         return new NvidiaApiException("Request timeout", 504, e);

@@ -29,7 +29,7 @@ class AgentTest {
         }
 
         @Override
-        public AssistResponse process(String prompt, boolean streaming) {
+        public AssistResponse process(String prompt) {
             return AssistResponse.builder()
                     .content(responseContent)
                     .agentType("mock")
@@ -54,7 +54,7 @@ class AgentTest {
         Agent agent = new MockAgent("Test system prompt", "Test response");
         
         // Act
-        AssistResponse response = agent.process("Test prompt", false);
+        AssistResponse response = agent.process("Test prompt");
         
         // Assert
         assertNotNull(response, "Response should not be null");
@@ -95,20 +95,11 @@ class AgentTest {
     }
 
     @Test
-    void testProcessWithStreamingFlag() {
-        // Arrange
+    void testProcessReturnsResponse() {
         Agent agent = new MockAgent("Test system prompt", "Test response");
-        
-        // Act
-        AssistResponse nonStreamingResponse = agent.process("Test prompt", false);
-        AssistResponse streamingResponse = agent.process("Test prompt", true);
-        
-        // Assert
-        assertNotNull(nonStreamingResponse);
-        assertNotNull(streamingResponse);
-        // Both should return valid responses regardless of streaming flag
-        assertEquals("Test response", nonStreamingResponse.getContent());
-        assertEquals("Test response", streamingResponse.getContent());
+        AssistResponse response = agent.process("Test prompt");
+        assertNotNull(response);
+        assertEquals("Test response", response.getContent());
     }
 
     @Test
